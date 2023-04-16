@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  transfer_python:
+    build:
+      context: ..
+      dockerfile: containers/Dev.Dockerfile
+    container_name: transfer_python_script
+    env_file:
+      - ../env/dev.env
+    volumes:
+      - ../src:/var/app/
+    #depends_on:
+      #db-mysql-alpha:
+        #condition: service_healthy
+
+  db-mysql-alpha:
+      image: mysql:8.0.32
+      restart: always
+      hostname: db-mysql-alpha
+      container_name: db-mysql-alpha
+      env_file:
+        - ../env/dev.env
+        - ../env/alpha.env
+      ports:
+        - '3306:3306'
+      expose:
+        - '3306'
+      volumes:
+        - ~/db-alpha:/var/lib/mysql
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 20s
+        retries: 10
+
+  db-mysql-beta:
+      image: mysql:8.0.32
+      restart: always
+      hostname: db-mysql-beta
+      container_name: db-mysql-beta
+      env_file:
+        - ../env/dev.env
+        - ../env/beta.env
+      ports:
+        - '3307:3306'
+      expose:
+        - '3306'
+      volumes:
+        - ~/db-beta:/var/lib/mysql
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 20s
+        retries: 10
