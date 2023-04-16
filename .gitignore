@@ -163,6 +163,8 @@ cython_debug/
 
 # Databases
 db/
+db-alpha/
+db-beta/
 
 # Terraform
 .terraform/
